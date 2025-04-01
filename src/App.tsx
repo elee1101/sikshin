@@ -1,10 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Search from './pages/Search';
+import Explore from './pages/Explore';
+import Category from './pages/Category';
+import Subscriptions from './pages/Subscriptions';
+import Favorites from './pages/Favorites';
+import Profile from './pages/Profile';
 import Navbar from './components/Navbar';
-import Home from './pages/home';
-import Search from './pages/search';
-import Favorites from './pages/favorites';
-import Subscriptions from './pages/subscriptions';
-import Profile from './pages/profile';
 
 function App() {
   return (
@@ -13,8 +15,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/favorites" element={<Favorites />} />
+        <Route path="/explore" element={<Explore />} />
+        <Route path="/category/:name" element={<Category />} />
         <Route path="/subscriptions" element={<Subscriptions />} />
+        <Route path="/favorites" element={<Favorites />} />
         <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>

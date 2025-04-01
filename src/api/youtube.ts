@@ -1,15 +1,22 @@
 import axios from 'axios';
+import { YouTubeVideo } from '../types';
 
-export const searchYouTube = async (query: string) => {
-  const key = import.meta.env.VITE_YOUTUBE_API_KEY;
-  const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
+const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
+const BASE_URL = 'https://www.googleapis.com/youtube/v3';
+
+export const searchYouTube = async (
+  query: string,
+  maxResults = 9
+): Promise<YouTubeVideo[]> => {
+  const res = await axios.get(`${BASE_URL}/search`, {
     params: {
       part: 'snippet',
       q: query,
+      maxResults,
       type: 'video',
-      key: key,
-      maxResults: 10
-    }
+      key: API_KEY,
+    },
   });
-  return response.data.items;
+
+  return res.data.items;
 };
