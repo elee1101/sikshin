@@ -1,19 +1,71 @@
-export const Favorites = () => {
-  return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Favorites</h1>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        {[1, 2, 3, 4, 5, 6].map((num) => (
-          <div
-            key={num}
-            className="bg-zinc-100 rounded-lg p-4 text-center shadow-sm hover:shadow-md"
-          >
-            📁 Folder {num}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
-export default Favorites;
+interface Favorite {
+  id: number;
+  title: string;
+  description: string;
+}
+
+export default function Favorites() {
+  const [favorites, setFavorites] = useState<Favorite[]>([]);
+
+  useEffect(() => {
+    fetchFavorites();
+  }, []);
+
+  const fetchFavorites = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/favorites');
+      setFavorites(res.data);
+    } catch (err) {
+      console.error('Error fetching favorites:', err);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      await axios.delete(`http://localhost:5000/favorites/${id}`);
+      setFavorites(prev => prev.filter(fav => fav.id !== id));
+    } catch (err) {
+      console.error('Error deleting favorite:', err);
+    }
+  };
+
+  const getYouTubeEmbedUrl = (title: string) => {
+    const query = encodeURIComponent(`korean recipe ${title}`);
+    return `https://www.youtube.com/embed?listType=search&list=${query}`;
+  };
+
+  return (
+    <main className="max-w-4xl mx-auto px-4 py-8">
+      <h2 className="text-3xl font-bold mb-6">Your Favorite Recipes ❤️</h2>
+      {favorites.length === 0 ? (
+        <p>No favorites yet.</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {favorites.map(fav => (
+            <div key={fav.id} className="border rounded-xl overflow-hidden shadow-sm bg-white">
+              <iframe
+                src={getYouTubeEmbedUrl(fav.title)}
+                title={fav.title}
+                className="w-full h-60"
+                allowFullScreen
+              ></iframe>
+              <div className="p-4">
+                <h3 className="text-lg font-bold mb-1">{fav.title}</h3>
+                <p className="text-sm text-zinc-500 mb-3">{fav.description}</p>
+                <button
+                  onClick={() => handleDelete(fav.id)}
+                  className="text-red-500 border border-red-500 px-3 py-1 rounded hover:bg-red-100 transition"
+                >
+                  🗑 Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </main>
+  );
+}

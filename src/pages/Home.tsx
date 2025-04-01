@@ -11,7 +11,6 @@ export default function Home() {
   useEffect(() => {
     const fetchTrending = async () => {
       const results = await searchYouTube('korean food recipe');
-      console.log('API Results:', results);
       setVideo(results[0]); 
     };
     fetchTrending();

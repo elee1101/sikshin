@@ -11,3 +11,9 @@ export interface YouTubeVideo {
     };
   };
 }
+
+export interface FavoriteRecipe {
+  id: number;
+  title: string;
+  description: string;
+}
