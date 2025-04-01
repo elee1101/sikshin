@@ -1,38 +1,34 @@
 import express from "express";
 import cors from "cors";
+import { readFavorites, writeFavorites } from "./db.js";
 
 const app = express();
 const PORT = 5000;
 
-app.use(cors()); // allow frontend to connect
-app.use(express.json()); // for parsing JSON bodies
+app.use(cors());
+app.use(express.json());
 
-// In-memory favorites (you can later connect this to a real DB)
-let favorites = [
-  { id: 1, title: "Bibimbap", description: "Mixed rice bowl" },
-  { id: 2, title: "Tteokbokki", description: "Spicy rice cakes" },
-];
-
-// GET /favorites
-app.get("/favorites", (req, res) => {
+app.get("/favorites", async (req, res) => {
+  const favorites = await readFavorites();
   res.json(favorites);
 });
 
-// POST /favorites
-app.post("/favorites", (req, res) => {
+app.post("/favorites", async (req, res) => {
+  const favorites = await readFavorites();
   const newFavorite = req.body;
-  favorites.push(newFavorite);
+  const updated = [...favorites, newFavorite];
+  await writeFavorites(updated);
   res.status(201).json(newFavorite);
 });
 
-// DELETE /favorites/:id
-app.delete("/favorites/:id", (req, res) => {
+app.delete("/favorites/:id", async (req, res) => {
   const id = parseInt(req.params.id);
-  favorites = favorites.filter((fav) => fav.id !== id);
-  res.status(200).json({ message: "Favorite deleted" });
+  const favorites = await readFavorites();
+  const updated = favorites.filter((fav) => fav.id !== id);
+  await writeFavorites(updated);
+  res.json({ message: "Favorite deleted" });
 });
 
-// Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
