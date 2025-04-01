@@ -14,6 +14,7 @@ const VideoCard: React.FC<VideoProps> = ({ video }) => {
       await axios.post('http://localhost:5000/favorites', {
         id: Date.now(), // unique dummy ID
         title,
+        videoId,
         description: 'Saved from YouTube results', // or customize later
       });
       alert('✅ Saved to favorites!');

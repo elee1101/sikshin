@@ -5,6 +5,7 @@ interface Favorite {
   id: number;
   title: string;
   description: string;
+  videoId: string;
 }
 
 export default function Favorites() {
@@ -32,9 +33,8 @@ export default function Favorites() {
     }
   };
 
-  const getYouTubeEmbedUrl = (title: string) => {
-    const query = encodeURIComponent(`korean recipe ${title}`);
-    return `https://www.youtube.com/embed?listType=search&list=${query}`;
+  const getYouTubeEmbedUrl = (videoId: string) => {
+    return `https://www.youtube.com/embed/${videoId}`;
   };
 
   return (
@@ -47,7 +47,7 @@ export default function Favorites() {
           {favorites.map(fav => (
             <div key={fav.id} className="border rounded-xl overflow-hidden shadow-sm bg-white">
               <iframe
-                src={getYouTubeEmbedUrl(fav.title)}
+                src={getYouTubeEmbedUrl(fav.videoId)}
                 title={fav.title}
                 className="w-full h-60"
                 allowFullScreen
