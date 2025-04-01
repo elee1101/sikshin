@@ -12,7 +12,7 @@ const Profile = () => {
           </div>
         </div>
         <button className="bg-zinc-800 text-white px-4 py-2 rounded-md text-sm hover:bg-zinc-700">
-          Download
+          Button
         </button>
       </div>
     </div>
